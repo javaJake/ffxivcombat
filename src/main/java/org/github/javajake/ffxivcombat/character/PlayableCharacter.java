@@ -1,6 +1,5 @@
 package org.github.javajake.ffxivcombat.character;
 
-import java.time.Duration;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
 

@@ -1,5 +1,7 @@
 plugins {
+    id("checkstyle")
     id("java")
+    id("pmd")
 }
 
 group = "org.github.javajake"
@@ -22,4 +24,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = "10.12.2"
 }
