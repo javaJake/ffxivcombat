@@ -11,6 +11,10 @@ import org.github.javajake.ffxivcombat.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
 
+/**
+ * Capable of performing
+ */
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis") // allow pseudo-constants so functions are clear
 public class PlayableCharacterMath {
   public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
   public static final BigDecimal THOUSAND = BigDecimal.valueOf(1000);
@@ -43,11 +47,11 @@ public class PlayableCharacterMath {
     for (RateModifier rateModifier : rateModifiers) {
       switch (rateModifier.rate()) {
         case ALL -> {
-          criticalHitRateChange += rateModifier.rateChange();
-          directHitRateChange += rateModifier.rateChange();
+          criticalHitRateChange += rateModifier.amount();
+          directHitRateChange += rateModifier.amount();
         }
-        case CRITICAL_RATE -> criticalHitRateChange += rateModifier.rateChange();
-        case DIRECT_HIT_RATE -> directHitRateChange += rateModifier.rateChange();
+        case CRITICAL_RATE -> criticalHitRateChange += rateModifier.amount();
+        case DIRECT_HIT_RATE -> directHitRateChange += rateModifier.amount();
       }
     }
     this.criticalHitRateChange = criticalHitRateChange;
@@ -79,33 +83,39 @@ public class PlayableCharacterMath {
   }
 
   public int getAttackPower() {
-    final int powerStat = getJobAppropriateAttackPowerStat();
-    if (levelMod.level() < 51) {
+    if (levelMod.level() <= LevelMod.ARR_LEVEL) {
       return (int)
-          (Math.floor(75.0 * (powerStat - 340.0) / 340.0) + 100);
-    } else if (levelMod.level() < 71) {
+          (Math.floor(75.0
+              * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
+    } else if (levelMod.level() <= LevelMod.SB_LEVEL) {
       return (int)
-          (Math.floor(Math.floor((levelMod.level() - 50.0) * 2.5 + 75.0) * (powerStat - levelMod.main()) / levelMod.main()) + 100.0);
-    } else if (levelMod.level() < 81) {
+          (Math.floor(Math.floor(
+              (levelMod.level() - 50.0) * 2.5 + 75.0)
+              * (getJobAppropriateAttackPowerStat() - levelMod.main()) / levelMod.main()) + 100.0);
+    } else if (levelMod.level() <= LevelMod.SHB_LEVEL) {
       switch (jobMod) {
         case PLD, WAR, DRK, GNB -> {
           return (int)
-              (Math.floor(115.0 * (powerStat - 340.0) / 340.0) + 100);
+              (Math.floor(115.0
+                  * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
         }
         default -> {
           return (int)
-              (Math.floor(165.0 * (powerStat - 340.0) / 340.0) + 100);
+              (Math.floor(165.0
+                  * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
         }
       }
-    } else if (levelMod.level() < 91) {
+    } else if (levelMod.level() <= LevelMod.EW_LEVEL) {
       switch (jobMod) {
         case PLD, WAR, DRK, GNB -> {
           return (int)
-              (Math.floor(156.0 * (powerStat - 390.0) / 390.0) + 100);
+              (Math.floor(156.0
+                  * (getJobAppropriateAttackPowerStat() - 390.0) / 390.0) + 100);
         }
         default -> {
           return (int)
-              (Math.floor(195.0 * (powerStat - 390.0) / 390.0) + 100);
+              (Math.floor(195.0
+                  * (getJobAppropriateAttackPowerStat() - 390.0) / 390.0) + 100);
         }
       }
     }
@@ -113,12 +123,12 @@ public class PlayableCharacterMath {
   }
 
   public int getHealingMagicPotency() {
-    final int powerStat = getJobAppropriateHealingPowerStat();
-    if (levelMod.level() < 90) {
+    if (levelMod.level() < LevelMod.EW_LEVEL) {
       throw new UnsupportedOperationException("HMP below level 90 is unknown");
     } else {
       return (int)
-          (Math.floor(569.0 * (powerStat - 390.0) / 1522.0) + 100);
+          (Math.floor(569.0
+              * (getJobAppropriateHealingPowerStat() - 390.0) / 1522.0) + 100);
     }
   }
 
@@ -272,8 +282,9 @@ public class PlayableCharacterMath {
   public int getDirectDamage(DamageAction action, double criticalHitRate, double directHitRate, double variance) {
     int criticalHitModifier = (int) ((getCriticalHit() - 1000) * criticalHitRate + 1000);
     int directHitModifier = (int) ((25 * directHitRate) + 100);
+
     if (variance < 0 || variance > 10) {
-      throw new IllegalArgumentException("Variance range is 0 - 10. This is out of range: " + variance);
+      throw new VarianceOutOfRangeException(variance);
     }
     variance += 95;
 

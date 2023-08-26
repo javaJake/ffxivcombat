@@ -1,5 +1,17 @@
 package org.github.javajake.ffxivcombat.constants;
 
+/**
+ * Holds constants for each level.
+ *
+ * @param level  the level of the character
+ * @param mp     the mp constant
+ * @param main   the main constant
+ * @param sub    the sub constant
+ * @param div    the div constant
+ * @param hp     the hp constant
+ * @param elmt   the elmt constant
+ * @param threat the threat constant
+ */
 public record LevelMod(
     int level,
     int mp,
@@ -10,6 +22,12 @@ public record LevelMod(
     int elmt,
     int threat
 ) {
+
+  public static final int ARR_LEVEL = 50;
+  public static final int HW_LEVEL = 60;
+  public static final int SB_LEVEL = 70;
+  public static final int SHB_LEVEL = 80;
+  public static final int EW_LEVEL = 90;
 
   public static final LevelMod[] BY_LEVEL = new LevelMod[]{
       null, // level 0 doesn't exist
