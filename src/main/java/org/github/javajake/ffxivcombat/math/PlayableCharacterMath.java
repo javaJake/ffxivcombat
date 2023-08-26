@@ -10,7 +10,7 @@ import org.github.javajake.ffxivcombat.buffs.RateModifier;
 import org.github.javajake.ffxivcombat.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
-import org.github.javajake.ffxivcombat.math.akhmorning.FunctionsMath;
+import org.github.javajake.ffxivcombat.math.akhmorning.Functions;
 
 /**
  * Capable of performing
@@ -26,7 +26,7 @@ public class PlayableCharacterMath {
   /* *** Stat-modified character *** */
   // only stat that can't be modified is the main stat; see mainStat for that
   private final PlayableCharacter character;
-  private final FunctionsMath functions;
+  private final Functions functions;
   /* *** Damage modifiers *** */
   private final List<DamageMultiplier> damageMultipliers;
   /* *** Rate modifiers *** */
@@ -38,7 +38,7 @@ public class PlayableCharacterMath {
       List<DamageMultiplier> damageMultipliers,
       List<RateModifier> rateModifiers) {
     this.character = character;
-    this.functions = new FunctionsMath(character);
+    this.functions = new Functions(character);
     this.damageMultipliers = damageMultipliers;
 
     // Just for convenience
@@ -94,18 +94,6 @@ public class PlayableCharacterMath {
     return gcd4 * 10;
   }
 
-  public double getCriticalHitRate() {
-    return
-        (Math.floor(200.0 * (this.character.criticalHit() - levelMod.sub()) / levelMod.div() + 50) / 1000.0)
-        + this.criticalHitRateChange;
-  }
-
-  public double getDirectHitRate() {
-    return
-        (Math.floor(550.0 * (this.character.directHit() - levelMod.sub()) / levelMod.div()) / 1000.0)
-        + this.directHitRateChange;
-  }
-
   public int getBlockProbability() {
     return (int)
         (Math.floor(30.0 * this.character.blockRate() / levelMod.div()) + 10);
@@ -146,45 +134,6 @@ public class PlayableCharacterMath {
     }
 
     return (int) heal4;
-  }
-
-  public int getDirectDamage(DamageAction action, double variance) {
-    return getDirectDamage(action, this.getCriticalHitRate(), this.getDirectHitRate(), variance);
-  }
-
-  public int getDirectDamage(DamageAction action, double criticalHitRate, double directHitRate, double variance) {
-    int criticalHitModifier = (int) ((functions.fCRIT() - 1000) * criticalHitRate + 1000);
-    int directHitModifier = (int) ((25 * directHitRate) + 100);
-
-    if (variance < 0 || variance > 10) {
-      throw new VarianceOutOfRangeException(variance);
-    }
-    variance += 95;
-
-    BigDecimal bigPotency = BigDecimal.valueOf(action.potency());
-    BigDecimal bigAttackPower = BigDecimal.valueOf(functions.fAP());
-    BigDecimal bigDetermination = BigDecimal.valueOf(functions.fDET());
-
-    int damage1 =
-        bigPotency
-            .multiply(bigAttackPower)
-            .multiply(bigDetermination)
-            .divide(HUNDRED, RoundingMode.FLOOR)
-            .divide(THOUSAND, RoundingMode.FLOOR)
-            .intValue();
-    int damage2 = (int)
-        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * functions.fTEN()) / 1000.0) * functions.fWD()) / 100.0) * jobMod.trait()) / 100.0);
-    int damage3 = (int)
-        (Math.floor(Math.floor(Math.floor(damage2 * criticalHitModifier) / 1000.0) * directHitModifier) / 100.0);
-    double damage4 =
-        (Math.floor(damage3 * variance) / 100.0);
-
-    for (DamageMultiplier buff : this.damageMultipliers) {
-      damage4 =
-          (Math.floor(damage4 * buff.multiplier()));
-    }
-
-    return (int) damage4;
   }
 
   public int getDamageOverTime(DamageAction action, double variance) {

@@ -8,13 +8,13 @@ import org.github.javajake.ffxivcombat.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
 
-public class FunctionsMath {
+public class Functions {
 
   private final PlayableCharacter character;
   private final LevelMod levelMod;
   private final JobMod jobMod;
 
-  public FunctionsMath(PlayableCharacter character) {
+  public Functions(PlayableCharacter character) {
     this.character = character;
 
     // Just for convenience
