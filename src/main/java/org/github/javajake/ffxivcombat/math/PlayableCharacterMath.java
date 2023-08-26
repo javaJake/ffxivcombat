@@ -10,6 +10,7 @@ import org.github.javajake.ffxivcombat.buffs.RateModifier;
 import org.github.javajake.ffxivcombat.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
+import org.github.javajake.ffxivcombat.math.akhmorning.FunctionsMath;
 
 /**
  * Capable of performing
@@ -25,6 +26,7 @@ public class PlayableCharacterMath {
   /* *** Stat-modified character *** */
   // only stat that can't be modified is the main stat; see mainStat for that
   private final PlayableCharacter character;
+  private final FunctionsMath functions;
   /* *** Damage modifiers *** */
   private final List<DamageMultiplier> damageMultipliers;
   /* *** Rate modifiers *** */
@@ -36,6 +38,7 @@ public class PlayableCharacterMath {
       List<DamageMultiplier> damageMultipliers,
       List<RateModifier> rateModifiers) {
     this.character = character;
+    this.functions = new FunctionsMath(character);
     this.damageMultipliers = damageMultipliers;
 
     // Just for convenience
@@ -58,105 +61,6 @@ public class PlayableCharacterMath {
     this.directHitRateChange = directHitRateChange;
   }
 
-  public int getWeaponDamage() {
-    return (int)
-        (Math.floor(levelMod.main() * this.jobMod.mainStat() / 1000.0) + this.character.weaponDamage());
-  }
-
-  public int getJobAppropriateAttackPowerStat() {
-    return switch (jobMod.mainStatName()) {
-      case STR -> this.character.strength();
-      case DEX -> this.character.dexterity();
-      case INT -> this.character.intelligence();
-      case MND -> this.character.mind();
-      default -> throw new IllegalStateException("BUG: Unknown power stat for: " + jobMod.mainStatName());
-    };
-  }
-
-  public int getJobAppropriateHealingPowerStat() {
-    if (jobMod == JobMod.SMN) {
-      // Yea, SMN gets the short end on this one
-      return this.character.mind();
-    } else {
-      return this.getJobAppropriateAttackPowerStat();
-    }
-  }
-
-  public int getAttackPower() {
-    if (levelMod.level() <= LevelMod.ARR_LEVEL) {
-      return (int)
-          (Math.floor(75.0
-              * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
-    } else if (levelMod.level() <= LevelMod.SB_LEVEL) {
-      return (int)
-          (Math.floor(Math.floor(
-              (levelMod.level() - 50.0) * 2.5 + 75.0)
-              * (getJobAppropriateAttackPowerStat() - levelMod.main()) / levelMod.main()) + 100.0);
-    } else if (levelMod.level() <= LevelMod.SHB_LEVEL) {
-      switch (jobMod) {
-        case PLD, WAR, DRK, GNB -> {
-          return (int)
-              (Math.floor(115.0
-                  * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
-        }
-        default -> {
-          return (int)
-              (Math.floor(165.0
-                  * (getJobAppropriateAttackPowerStat() - 340.0) / 340.0) + 100);
-        }
-      }
-    } else if (levelMod.level() <= LevelMod.EW_LEVEL) {
-      switch (jobMod) {
-        case PLD, WAR, DRK, GNB -> {
-          return (int)
-              (Math.floor(156.0
-                  * (getJobAppropriateAttackPowerStat() - 390.0) / 390.0) + 100);
-        }
-        default -> {
-          return (int)
-              (Math.floor(195.0
-                  * (getJobAppropriateAttackPowerStat() - 390.0) / 390.0) + 100);
-        }
-      }
-    }
-    throw new IllegalStateException("BUG: missing attack power function for level: " + levelMod.level());
-  }
-
-  public int getHealingMagicPotency() {
-    if (levelMod.level() < LevelMod.EW_LEVEL) {
-      throw new UnsupportedOperationException("HMP below level 90 is unknown");
-    } else {
-      return (int)
-          (Math.floor(569.0
-              * (getJobAppropriateHealingPowerStat() - 390.0) / 1522.0) + 100);
-    }
-  }
-
-  public int getDetermination() {
-    return (int)
-        (Math.floor(140.0 * ( this.character.determination() - levelMod.main()) / levelMod.div() + 1000.0));
-  }
-
-  public int getTenacity() {
-    switch (jobMod) {
-      case PLD, WAR, DRK, GNB -> {
-        return (int)
-            (Math.floor(100.0 * ( this.character.tenacity() - levelMod.sub()) / levelMod.div() + 1000.0));
-      }
-      default -> {
-        return 1000;
-      }
-    }
-  }
-
-  public int getJobAppropriateSpeedStat() {
-    return switch (jobMod.mainStatName()) {
-      case STR, DEX -> this.character.skillSpeed();
-      case INT, MND -> this.character.spellSpeed();
-      default -> throw new IllegalStateException("BUG: Unknown speed stat for: " + jobMod.mainStatName());
-    };
-  }
-
   public int getHP() {
     switch (jobMod) {
       case PLD, WAR, DRK, GNB -> {
@@ -171,12 +75,6 @@ public class PlayableCharacterMath {
     }
   }
 
-  public int getSpeed() {
-    final int speedStat = getJobAppropriateSpeedStat();
-    return (int)
-        (Math.floor(130.0 * (speedStat - levelMod.sub()) / levelMod.div() + 1000.0));
-  }
-
   public int getGcdMillis(int typeY, int typeZ) {
     return this.getCastTimeMillis(2500, typeY, typeZ);
   }
@@ -186,7 +84,7 @@ public class PlayableCharacterMath {
     final int astralUmbral = 100;
 
     int gcd1 = (int)
-        Math.floor((2000.0 - getSpeed()) * actionCastTimeMillis / 1000.0);
+        Math.floor((2000.0 - functions.fSPD()) * actionCastTimeMillis / 1000.0);
     int gcd2 = (int)
         Math.floor((100.0 - typeY) * (100.0 - haste) / 100.0);
     double gcd3 = (100.0 - typeZ) / 100.0;
@@ -194,11 +92,6 @@ public class PlayableCharacterMath {
         Math.floor(Math.floor(Math.ceil(gcd2 * gcd3) * gcd1 / 1000.0) * astralUmbral / 100.0);
 
     return gcd4 * 10;
-  }
-
-  public int getCriticalHit() {
-    return (int)
-        (Math.floor(200.0 * (this.character.criticalHit() - levelMod.sub()) / levelMod.div() + 1400.0));
   }
 
   public double getCriticalHitRate() {
@@ -213,29 +106,9 @@ public class PlayableCharacterMath {
         + this.directHitRateChange;
   }
 
-  public int getDefense() {
-    return (int)
-        (Math.floor(15.0 * this.character.defense() / levelMod.div()));
-  }
-
-  public int getMagicDefense() {
-    return (int)
-        (Math.floor(15.0 * this.character.magicDefense() / levelMod.div()));
-  }
-
   public int getBlockProbability() {
     return (int)
         (Math.floor(30.0 * this.character.blockRate() / levelMod.div()) + 10);
-  }
-
-  public int getBlockStrength() {
-    return (int)
-        (Math.floor(15.0 * this.character.blockStrength() / levelMod.div()) + 10);
-  }
-
-  public int getAutoAttack() {
-    return (int)
-        (Math.floor(Math.floor((levelMod.main() * jobMod.mainStat() / 1000.0) + this.character.weaponDamage()) * (this.character.weaponDelay() / 3.0)));
   }
 
   public int getHealing(int healPotency, double variance) {
@@ -243,15 +116,15 @@ public class PlayableCharacterMath {
   }
 
   public int getHealing(int healPotency, double criticalHitRate, double variance) {
-    int criticalHitModifier = (int) ((getCriticalHit() - 1000) * criticalHitRate + 1000);
+    int criticalHitModifier = (int) ((functions.fCRIT() - 1000) * criticalHitRate + 1000);
     if (variance < 0 || variance > 6) {
       throw new IllegalArgumentException("Variance range is 0 - 6. This is out of range: " + variance);
     }
     variance += 97;
 
     BigDecimal bigPotency = BigDecimal.valueOf(healPotency);
-    BigDecimal bigHealingMagicPotency = BigDecimal.valueOf(getHealingMagicPotency());
-    BigDecimal bigDetermination = BigDecimal.valueOf(getDetermination());
+    BigDecimal bigHealingMagicPotency = BigDecimal.valueOf(functions.fHMP());
+    BigDecimal bigDetermination = BigDecimal.valueOf(functions.fDET());
 
     int heal1 =
         bigPotency
@@ -261,7 +134,7 @@ public class PlayableCharacterMath {
             .divide(THOUSAND, RoundingMode.FLOOR)
             .intValue();
     int heal2 = (int)
-        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(heal1 * getTenacity()) / 1000.0) * getWeaponDamage()) / 100.0) * jobMod.trait()) / 100.0);
+        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(heal1 * functions.fTEN()) / 1000.0) * functions.fWD()) / 100.0) * jobMod.trait()) / 100.0);
     int heal3 = (int)
         (Math.floor(Math.floor(heal2 * criticalHitModifier) / 1000.0));
     double heal4 =
@@ -280,7 +153,7 @@ public class PlayableCharacterMath {
   }
 
   public int getDirectDamage(DamageAction action, double criticalHitRate, double directHitRate, double variance) {
-    int criticalHitModifier = (int) ((getCriticalHit() - 1000) * criticalHitRate + 1000);
+    int criticalHitModifier = (int) ((functions.fCRIT() - 1000) * criticalHitRate + 1000);
     int directHitModifier = (int) ((25 * directHitRate) + 100);
 
     if (variance < 0 || variance > 10) {
@@ -289,8 +162,8 @@ public class PlayableCharacterMath {
     variance += 95;
 
     BigDecimal bigPotency = BigDecimal.valueOf(action.potency());
-    BigDecimal bigAttackPower = BigDecimal.valueOf(getAttackPower());
-    BigDecimal bigDetermination = BigDecimal.valueOf(getDetermination());
+    BigDecimal bigAttackPower = BigDecimal.valueOf(functions.fAP());
+    BigDecimal bigDetermination = BigDecimal.valueOf(functions.fDET());
 
     int damage1 =
         bigPotency
@@ -300,7 +173,7 @@ public class PlayableCharacterMath {
             .divide(THOUSAND, RoundingMode.FLOOR)
             .intValue();
     int damage2 = (int)
-        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * getTenacity()) / 1000.0) * getWeaponDamage()) / 100.0) * jobMod.trait()) / 100.0);
+        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * functions.fTEN()) / 1000.0) * functions.fWD()) / 100.0) * jobMod.trait()) / 100.0);
     int damage3 = (int)
         (Math.floor(Math.floor(Math.floor(damage2 * criticalHitModifier) / 1000.0) * directHitModifier) / 100.0);
     double damage4 =
@@ -319,7 +192,7 @@ public class PlayableCharacterMath {
   }
 
   public int getDamageOverTime(DamageAction action, double criticalHitRate, double directHitRate, double variance) {
-    int criticalHitModifier = (int) ((getCriticalHit() - 1000) * criticalHitRate + 1000);
+    int criticalHitModifier = (int) ((functions.fCRIT() - 1000) * criticalHitRate + 1000);
     int directHitModifier = (int) ((25 * directHitRate) + 100);
     if (variance < 0 || variance > 10) {
       throw new IllegalArgumentException("Variance range is 0 - 10. This is out of range: " + variance);
@@ -327,8 +200,8 @@ public class PlayableCharacterMath {
     variance += 95;
 
     BigDecimal bigPotency = BigDecimal.valueOf(action.potency());
-    BigDecimal bigAttackPower = BigDecimal.valueOf(getAttackPower());
-    BigDecimal bigDetermination = BigDecimal.valueOf(getDetermination());
+    BigDecimal bigAttackPower = BigDecimal.valueOf(functions.fAP());
+    BigDecimal bigDetermination = BigDecimal.valueOf(functions.fDET());
 
     double finalDamage;
     switch (action.type()) {
@@ -342,7 +215,7 @@ public class PlayableCharacterMath {
                 .divide(THOUSAND, RoundingMode.FLOOR)
                 .intValue();
         int damage2 = (int)
-            (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * getTenacity()) / 1000.0) * getSpeed()) / 1000.0) * getWeaponDamage()) / 100.0) * jobMod.trait()) / 100.0) + 1;
+            (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * functions.fTEN()) / 1000.0) * functions.fSPD()) / 1000.0) * functions.fWD()) / 100.0) * jobMod.trait()) / 100.0) + 1;
         int damage3 = (int)
             (Math.floor(damage2 * variance) / 100.0);
         finalDamage =
@@ -356,8 +229,8 @@ public class PlayableCharacterMath {
         return (int) finalDamage;
       }
       case MAGICAL -> {
-        BigDecimal bigWeaponDamage = BigDecimal.valueOf(getWeaponDamage());
-        BigDecimal bigSpeed = BigDecimal.valueOf(getSpeed());
+        BigDecimal bigWeaponDamage = BigDecimal.valueOf(functions.fWD());
+        BigDecimal bigSpeed = BigDecimal.valueOf(functions.fSPD());
 
         int damage1 =
             bigPotency
@@ -369,7 +242,7 @@ public class PlayableCharacterMath {
                 .divide(THOUSAND, RoundingMode.FLOOR)
                 .intValue();
         int damage2 = (int)
-            (Math.floor(Math.floor(Math.floor(Math.floor(damage1 * getDetermination()) / 1000.0) * getTenacity() / 1000.0) * jobMod.trait()) / 100.0) + 1;
+            (Math.floor(Math.floor(Math.floor(Math.floor(damage1 * functions.fDET()) / 1000.0) * functions.fTEN() / 1000.0) * jobMod.trait()) / 100.0) + 1;
         int damage3 = (int)
             (Math.floor(damage2 * variance) / 100.0);
         finalDamage =
@@ -391,7 +264,7 @@ public class PlayableCharacterMath {
   }
 
   public int getAutoAttackDamage(double criticalHitRate, double directHitRate, double variance) {
-    int criticalHitModifier = (int) ((getCriticalHit() - 1000) * criticalHitRate + 1000);
+    int criticalHitModifier = (int) ((functions.fCRIT() - 1000) * criticalHitRate + 1000);
     int directHitModifier = (int) ((25 * directHitRate) + 100);
     if (variance < 0 || variance > 10) {
       throw new IllegalArgumentException("Variance range is 0 - 10. This is out of range: " + variance);
@@ -404,8 +277,8 @@ public class PlayableCharacterMath {
       default -> bigPotency = BigDecimal.valueOf(110);
     }
 
-    BigDecimal bigAttackPower = BigDecimal.valueOf(getAttackPower());
-    BigDecimal bigDetermination = BigDecimal.valueOf(getDetermination());
+    BigDecimal bigAttackPower = BigDecimal.valueOf(functions.fAP());
+    BigDecimal bigDetermination = BigDecimal.valueOf(functions.fDET());
 
     int damage1 =
         bigPotency
@@ -415,7 +288,7 @@ public class PlayableCharacterMath {
             .divide(THOUSAND, RoundingMode.FLOOR)
             .intValue();
     int damage2 = (int)
-        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * getTenacity()) / 1000.0) * getSpeed()) / 1000.0) * getAutoAttack() / 100.0) * jobMod.trait()) / 100.0);
+        (Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(Math.floor(damage1 * functions.fTEN()) / 1000.0) * functions.fSPD()) / 1000.0) * functions.fAUTO() / 100.0) * jobMod.trait()) / 100.0);
     int damage3 = (int)
         (Math.floor(Math.floor(Math.floor(damage2 * criticalHitModifier) / 1000.0) * directHitModifier) / 100.0);
     double damage4 =
@@ -436,11 +309,11 @@ public class PlayableCharacterMath {
     variance += 95;
 
     int damage1 = (int)
-        (Math.floor(rawDamage * Math.floor(100 - (isMagic ? getMagicDefense() : getDefense()))) / 100.0);
+        (Math.floor(rawDamage * Math.floor(100 - (isMagic ? functions.fMDEF() : functions.fDEF()))) / 100.0);
     int damage2 = (int)
-        (Math.floor(damage1 * (2000.0 - getTenacity())) / 1000.0);
+        (Math.floor(damage1 * (2000.0 - functions.fTEN())) / 1000.0);
     int damage3 = (int)
-        (Math.floor(damage2 * (100.0 - getBlockStrength())) / 100.0);
+        (Math.floor(damage2 * (100.0 - functions.fBLK())) / 100.0);
     return (int) // damage4
         (Math.floor(damage3 * variance) / 100.0);
   }
