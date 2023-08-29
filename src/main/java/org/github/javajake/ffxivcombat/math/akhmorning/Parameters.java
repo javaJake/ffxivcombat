@@ -3,6 +3,7 @@ package org.github.javajake.ffxivcombat.math.akhmorning;
 import java.util.List;
 import org.github.javajake.ffxivcombat.buffs.RateModifier;
 import org.github.javajake.ffxivcombat.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
 
 public class Parameters {
@@ -11,6 +12,7 @@ public class Parameters {
   private final double criticalHitRateChange;
   private final double directHitRateChange;
   private final LevelMod levelMod;
+  private final JobMod jobMod;
 
   public Parameters(
       final PlayableCharacter character,
@@ -19,6 +21,7 @@ public class Parameters {
 
     // Just for convenience
     this.levelMod = this.character.levelMod();
+    this.jobMod = this.character.jobMod();
 
     double criticalHitRateChange = 0;
     double directHitRateChange = 0;
@@ -36,6 +39,44 @@ public class Parameters {
     // Akhmorning functions return percentages as integer values
     this.criticalHitRateChange = criticalHitRateChange * 100;
     this.directHitRateChange = directHitRateChange * 100;
+  }
+
+  /**
+   * Documentation:
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp</a>
+   *
+   * @return the probability of a Direct Hit
+   */
+  public int totalHP() {
+    if (levelMod.level() < LevelMod.EW_LEVEL) {
+      throw new UnsupportedOperationException("Total HP below level 90 is unknown");
+    } else {
+      switch (jobMod) {
+        case PLD, WAR, DRK, GNB -> {
+          throw new UnsupportedOperationException("Total HP for tanks is unknown");
+        }
+        default -> {
+          // TODO: Undocumented; word of mouth
+          return (int)
+              // ⌊ LevelMod[Lv, HP] · ( JobMod[Job, HP] /100) ⌋
+              (Math.floor(levelMod.hp() * (jobMod.hp() / 100.0))
+                  //  + ⌊ ( VIT - LevelMod[Lv, MAIN] ) · 22.1 ⌋
+                  + Math.floor((this.character.vitality() - levelMod.main()) * 24.3));
+        }
+      }
+    }
+  }
+
+  /**
+   * Documentation:
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability</a>
+   *
+   * @return the probability of blocking
+   */
+  public int pBLK() {
+    return (int)
+        // ⌊ ( 30 · Block Rate ) / LevelMod[Lv, DIV] + 10 ⌋
+        (Math.floor(30.0 * this.character.blockRate() / levelMod.div()) + 10);
   }
 
   /**

@@ -76,13 +76,13 @@ public class Functions {
       switch (jobMod) {
         case PLD, WAR, DRK, GNB -> {
           return (int)
-              // Undocumented; word of mouth
+              // TODO: Undocumented; word of mouth
               (Math.floor(156.0
                   * (getAttackPowerStat(character) - levelMod.main()) / levelMod.main()) + 100);
         }
         default -> {
           return (int)
-              // Undocumented; word of mouth
+              // TODO: Undocumented; word of mouth
               (Math.floor(195.0
                   * (getAttackPowerStat(character) - levelMod.main()) / levelMod.main()) + 100);
         }
@@ -209,7 +209,7 @@ public class Functions {
       throw new UnsupportedOperationException("HMP below level 90 is unknown");
     } else {
       return (int)
-          // Undocumented; word of mouth
+          // TODO: Undocumented; word of mouth
           (Math.floor(569.0
               * (getHealingPowerStat(character) - 390.0) / 1522.0) + 100);
     }
