@@ -19,8 +19,21 @@ is a work in progress at the moment.
 The library is not yet published to Maven Central. When it is, there will be documentation here for
 how to add the library to a Java project, using either Maven or Gradle.
 
-Here's a basic example where a ninja character is created and the direct damage is calculated for
-the first action in their basic combo, "Spinning Edge," assuming no party, food, or potion buffs.
+The basic flow should be:
+1. Create a `PlayableCharacter` object with all the appropriate stats.
+2. Decide what buffs apply, and create those. For example, use `DamageMultiplier` for the classic
+   raid-wide buffs; use `PartyUtil` to create a set of `StatMultiplier` buffs for a given party
+   composition; and use `FoodUtil` to create a `StatAdjustment` buff for each stat that a given food
+   or potion affects.
+3. Use the `BuffedStatsCharacterBuilder` to create a new `PlayableCharacter` given the
+   `StatMultiplier` and `StatAdjustment` buffs.
+4. Create the correct math module from the `org.github.javajake.ffxivcombat.endwalker.math` package
+   and provide the "buffed" character along with any additional buffs or parameters the math class
+   requires.
+
+Here's a very basic example where a ninja character is created and the direct damage is calculated
+for the first action in their basic combo, "Spinning Edge," assuming no party, food, or potion
+buffs.
 ```java
 // Not all the stats are required; you can zero out selectively if you know.
 // Here I zero out the main stats that don't apply to Ninja, and block stats which only apply to PLD
