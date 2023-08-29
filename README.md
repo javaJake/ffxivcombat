@@ -65,10 +65,10 @@ You can use the `src/test/java` source code locally to mess around with the math
 
 ## Special Thanks
 This library was developed while I was on the sleepocat team, and it was with their help and
-observations that I grew a love for the theorycrafting side of the game. The sleepocat team has a
-strong culture of contributing back to the community, and I'd like to think this library is a part
-of that.
+observations that I grew a love for the theorycrafting side of the game. The sleepocat team has
+always considered how to better the surrounding community in all that they do, and it's that spirit
+that has driven me to publish this.
 
-The Allagan Studies Discord community was also instrumental in answering the toughest questions.
-The work they've done to collect and develop the math is the source of most, if not all, the math
-contained in this library.
+The Allagan Studies Discord community has been and will be instrumental. They have had unending
+patience with all my dumb questions. The work they've done to collect and develop the math is the
+source of most, if not all, the math contained in this library.
