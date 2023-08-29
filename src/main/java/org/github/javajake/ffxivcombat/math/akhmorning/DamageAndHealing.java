@@ -106,7 +106,7 @@ public class DamageAndHealing {
     if (variance < 0 || variance > 10) {
       throw new VarianceOutOfRangeException(variance);
     }
-    variance += 95;
+    final double variancePercent = variance + 95;
 
     int damage1 = (int)
         (Math.floor(Math.floor(Math.floor(
@@ -127,7 +127,7 @@ public class DamageAndHealing {
     double damage4 =
         (Math.floor(
         // D = ⌊ D3 × rand[95,105] ⌋ /100 ⌋
-        damage3 * variance) / 100.0);
+        damage3 * variancePercent) / 100.0);
 
     for (DamageMultiplier buff : damageMultipliers) {
       damage4 = (Math.floor(
@@ -203,7 +203,7 @@ public class DamageAndHealing {
       throw new IllegalArgumentException(
           "Variance range is 0 - 10. This is out of range: " + variance);
     }
-    variance += 95;
+    final double variancePercent = variance + 95;
 
     double finalDamage;
     switch (action.type()) {
@@ -222,7 +222,7 @@ public class DamageAndHealing {
         int damage3 = (int)
             (Math.floor(
             // D3 = ⌊ D2 × rand[95,105] ⌋ /100 ⌋
-            damage2 * variance) / 100.0);
+            damage2 * variancePercent) / 100.0);
         finalDamage = (Math.floor(Math.floor(Math.floor(
             // D = ⌊ D3 × CRIT? ⌋ /1000 ⌋ × DH? ⌋ /100 ⌋
             damage3 * criticalHitModifier) / 1000.0) * directHitModifier) / 100.0);
@@ -252,7 +252,7 @@ public class DamageAndHealing {
         int damage3 = (int)
             (Math.floor(
             // D3 = ⌊ D2 × rand[95,105] ⌋ /100 ⌋
-            damage2 * variance) / 100.0);
+            damage2 * variancePercent) / 100.0);
         finalDamage =
             (Math.floor(Math.floor(Math.floor(
             // D = ⌊ D3 × CRIT? ⌋ /1000 ⌋ × DH? ⌋ /100 ⌋
@@ -330,7 +330,7 @@ public class DamageAndHealing {
       throw new IllegalArgumentException(
           "Variance range is 0 - 10. This is out of range: " + variance);
     }
-    variance += 95;
+    final double variancePercent = variance + 95;
 
     /*
      * The potency of melee “Attack” autos is 110 potency. The potency of Physical Ranged “Shot”
@@ -360,7 +360,7 @@ public class DamageAndHealing {
     double damage4 =
         (Math.floor(
         // D = ⌊ D3 × rand[95,105] ⌋ /100 ⌋
-        damage3 * variance) / 100.0);
+        damage3 * variancePercent) / 100.0);
 
     for (DamageMultiplier buff : this.damageMultipliers) {
       damage4 = (Math.floor(
@@ -383,12 +383,12 @@ public class DamageAndHealing {
    * @return the numerical amount of damage taken
    */
   public int getDamageTaken(
-      int rawDamage, boolean isMagic, double variance, double[] defensiveBuffs) {
+      int rawDamage, boolean isMagic, double variance, double... defensiveBuffs) {
     if (variance < 0 || variance > 10) {
       throw new IllegalArgumentException(
           "Variance range is 0 - 10. This is out of range: " + variance);
     }
-    variance += 95;
+    final double variancePercent = variance + 95;
 
     int damage1 = (int)
         (Math.floor(
@@ -414,7 +414,7 @@ public class DamageAndHealing {
     double damage4 =
         (Math.floor(
             // PDT = ⌊ PDT3 × rand[95,105] ⌋ /100 ⌋
-            damage3 * variance) / 100.0);
+            damage3 * variancePercent) / 100.0);
 
     for (double defensiveBuff : defensiveBuffs) {
       damage4 = (Math.floor(
@@ -480,7 +480,7 @@ public class DamageAndHealing {
       throw new IllegalArgumentException(
           "Variance range is 0 - 6. This is out of range: " + variance);
     }
-    variance += 97;
+    final double variancePercent = variance + 97;
 
     int heal1 = (int)
         (Math.floor(Math.floor(Math.floor(
@@ -497,7 +497,7 @@ public class DamageAndHealing {
     double heal4 =
         (Math.floor(
         // H = ⌊ H3 × rand[97,103] ⌋ /100 ⌋
-        heal3 * variance) / 100.0);
+        heal3 * variancePercent) / 100.0);
 
     for (DamageMultiplier buff : this.damageMultipliers) {
       heal4 =

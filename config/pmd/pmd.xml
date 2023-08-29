@@ -9,6 +9,7 @@
         I got fed up with the default rules, so I'm setting them here.
     </description>
 
+    <rule ref="category/java/bestpractices.xml" />
     <rule ref="category/java/errorprone.xml">
         <exclude name="DataflowAnomalyAnalysis"/>
     </rule>
