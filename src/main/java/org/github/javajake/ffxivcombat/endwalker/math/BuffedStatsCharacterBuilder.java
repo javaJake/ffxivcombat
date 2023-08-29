@@ -1,10 +1,10 @@
-package org.github.javajake.ffxivcombat.math;
+package org.github.javajake.ffxivcombat.endwalker.math;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.github.javajake.ffxivcombat.buffs.StatAdjustment;
-import org.github.javajake.ffxivcombat.buffs.StatMultiplier;
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.buffs.StatAdjustment;
+import org.github.javajake.ffxivcombat.endwalker.buffs.StatMultiplier;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
 
 /**
  * Creates a new character that's been affected by certain buffs.

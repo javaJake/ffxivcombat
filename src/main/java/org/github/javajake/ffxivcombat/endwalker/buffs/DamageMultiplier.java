@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.buffs;
+package org.github.javajake.ffxivcombat.endwalker.buffs;
 
 /**
  * A type of buff that is a multiplier on the damage dealt.

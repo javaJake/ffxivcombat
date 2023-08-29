@@ -1,7 +1,7 @@
-package org.github.javajake.ffxivcombat.math.thebalance;
+package org.github.javajake.ffxivcombat.endwalker.math.thebalance;
 
 import java.time.Duration;
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
 
 /**
  * Codified versions of the math described by The Balance for casters.

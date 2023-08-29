@@ -1,7 +1,7 @@
-package org.github.javajake.ffxivcombat.math.akhmorning;
+package org.github.javajake.ffxivcombat.endwalker.math.akhmorning;
 
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
-import org.github.javajake.ffxivcombat.constants.JobMod;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.constants.JobMod;
 
 /**
  * Utility math functions for {@link Functions} that makes it easier to run the math.

@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.math.akhmorning;
+package org.github.javajake.ffxivcombat.endwalker.math.akhmorning;
 
 /**
  * Codified versions of the math in the page

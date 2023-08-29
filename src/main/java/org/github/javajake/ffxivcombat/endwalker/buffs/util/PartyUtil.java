@@ -1,9 +1,9 @@
-package org.github.javajake.ffxivcombat.buffs.util;
+package org.github.javajake.ffxivcombat.endwalker.buffs.util;
 
 import java.util.List;
-import org.github.javajake.ffxivcombat.buffs.Stat;
-import org.github.javajake.ffxivcombat.buffs.StatMultiplier;
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.buffs.Stat;
+import org.github.javajake.ffxivcombat.endwalker.buffs.StatMultiplier;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
 
 /**
  * Provides convenient tools for dealing with the parties of characters.

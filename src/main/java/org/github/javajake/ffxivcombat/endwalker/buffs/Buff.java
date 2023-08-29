@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.buffs;
+package org.github.javajake.ffxivcombat.endwalker.buffs;
 
 /**
  * A positive or negative buff of some kind.

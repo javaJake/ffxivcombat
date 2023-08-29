@@ -1,7 +1,7 @@
-package org.github.javajake.ffxivcombat.character;
+package org.github.javajake.ffxivcombat.endwalker.character;
 
-import org.github.javajake.ffxivcombat.constants.JobMod;
-import org.github.javajake.ffxivcombat.constants.LevelMod;
+import org.github.javajake.ffxivcombat.endwalker.constants.JobMod;
+import org.github.javajake.ffxivcombat.endwalker.constants.LevelMod;
 
 /**
  * Represents all possible desirable metadata for a playable character.

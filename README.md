@@ -1,2 +1,4 @@
-# ffxivcombat
-A Java library of functions for simulating the math in Final Fantasy 14
+# FFXIV Combat Library
+
+The goal of this library is to provide the foundational math for theory-crafting in Final Fantasy
+14. This library hosts the latest 

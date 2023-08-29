@@ -1,10 +1,10 @@
-package org.github.javajake.ffxivcombat.math.akhmorning;
+package org.github.javajake.ffxivcombat.endwalker.math.akhmorning;
 
 import java.util.List;
-import org.github.javajake.ffxivcombat.buffs.RateModifier;
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
-import org.github.javajake.ffxivcombat.constants.JobMod;
-import org.github.javajake.ffxivcombat.constants.LevelMod;
+import org.github.javajake.ffxivcombat.endwalker.buffs.RateModifier;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.constants.JobMod;
+import org.github.javajake.ffxivcombat.endwalker.constants.LevelMod;
 
 /**
  * Codified versions of the math in the page

@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.math;
+package org.github.javajake.ffxivcombat.endwalker.math;
 
 import java.io.Serial;
 

@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.actions;
+package org.github.javajake.ffxivcombat.endwalker.actions;
 
 /**
  * An action that does DPS.

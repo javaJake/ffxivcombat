@@ -1,10 +1,10 @@
-package org.github.javajake.ffxivcombat.math.akhmorning;
+package org.github.javajake.ffxivcombat.endwalker.math.akhmorning;
 
 import java.util.List;
-import org.github.javajake.ffxivcombat.actions.DamageAction;
-import org.github.javajake.ffxivcombat.buffs.DamageMultiplier;
-import org.github.javajake.ffxivcombat.constants.JobMod;
-import org.github.javajake.ffxivcombat.math.VarianceOutOfRangeException;
+import org.github.javajake.ffxivcombat.endwalker.actions.DamageAction;
+import org.github.javajake.ffxivcombat.endwalker.buffs.DamageMultiplier;
+import org.github.javajake.ffxivcombat.endwalker.constants.JobMod;
+import org.github.javajake.ffxivcombat.endwalker.math.VarianceOutOfRangeException;
 
 /**
  * Codified versions of the math in the page

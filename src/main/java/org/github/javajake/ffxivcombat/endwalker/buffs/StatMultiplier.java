@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.buffs;
+package org.github.javajake.ffxivcombat.endwalker.buffs;
 
 /**
  * A type of buff that is a simple positive or negative multiplier to the stats of a character.

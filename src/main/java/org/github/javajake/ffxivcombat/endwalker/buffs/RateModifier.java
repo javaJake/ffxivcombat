@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.buffs;
+package org.github.javajake.ffxivcombat.endwalker.buffs;
 
 /**
  * Changes a rate by a given amount, such as critical hit rate.

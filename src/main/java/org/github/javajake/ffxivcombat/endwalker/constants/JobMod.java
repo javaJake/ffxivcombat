@@ -1,4 +1,4 @@
-package org.github.javajake.ffxivcombat.constants;
+package org.github.javajake.ffxivcombat.endwalker.constants;
 
 /**
  * Holds constants for each job.

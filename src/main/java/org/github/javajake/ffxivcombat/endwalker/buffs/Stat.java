@@ -1,6 +1,6 @@
-package org.github.javajake.ffxivcombat.buffs;
+package org.github.javajake.ffxivcombat.endwalker.buffs;
 
-import org.github.javajake.ffxivcombat.character.PlayableCharacter;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
 
 /**
  * The types of stats that can be affected by stat buffs.
