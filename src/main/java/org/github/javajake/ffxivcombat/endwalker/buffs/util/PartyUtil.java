@@ -56,6 +56,21 @@ public final class PartyUtil {
       uniqueRoles = 0;
     }
 
+    return computePartyBuffGivenUniqueRoles(uniqueRoles);
+  }
+
+  /**
+   * Computes the correct stat multipliers that should be applied given a set of unique roles.
+   *
+   * @param uniqueRoles the count of unique roles that are in the party (0 if solo)
+   * @return the stat multipliers that take effect for being in this party
+   */
+  public static List<StatMultiplier> computePartyBuffGivenUniqueRoles(int uniqueRoles) {
+    if (uniqueRoles < 0 || uniqueRoles > 5) {
+      throw new IllegalArgumentException(
+          "uniqueRoles range is 0 - 5. This is out of range: " + uniqueRoles);
+    }
+
     final String buffName = "Party Bonus";
     return List.of(
         new StatMultiplier(buffName, (uniqueRoles / 100.0), Stat.STRENGTH),

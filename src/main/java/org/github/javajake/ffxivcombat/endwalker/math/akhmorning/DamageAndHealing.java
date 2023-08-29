@@ -3,6 +3,8 @@ package org.github.javajake.ffxivcombat.endwalker.math.akhmorning;
 import java.util.List;
 import org.github.javajake.ffxivcombat.endwalker.actions.DamageAction;
 import org.github.javajake.ffxivcombat.endwalker.buffs.DamageMultiplier;
+import org.github.javajake.ffxivcombat.endwalker.buffs.RateModifier;
+import org.github.javajake.ffxivcombat.endwalker.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.endwalker.constants.JobMod;
 import org.github.javajake.ffxivcombat.endwalker.math.VarianceOutOfRangeException;
 
@@ -20,19 +22,17 @@ public class DamageAndHealing {
   /**
    * Creates new "Damage and Healing" math for a given character.
    *
-   * @param functions         the "Functions" Ahkmorning math
-   * @param parameters        the "Parameters" Ahkmorning math
-   * @param jobMod            the JobMod constants of the current character
+   * @param character         the character to apply the math
    * @param damageMultipliers damage multiplier active on the current character
+   * @param rateModifiers     rate modifiers active on the current character
    */
   public DamageAndHealing(
-      Functions functions,
-      Parameters parameters,
-      JobMod jobMod,
-      List<DamageMultiplier> damageMultipliers) {
-    this.functions = functions;
-    this.parameters = parameters;
-    this.jobMod = jobMod;
+      final PlayableCharacter character,
+      final List<DamageMultiplier> damageMultipliers,
+      final List<RateModifier> rateModifiers) {
+    this.functions = new Functions(character);
+    this.parameters = new Parameters(character, rateModifiers);
+    this.jobMod = character.jobMod();
     this.damageMultipliers = damageMultipliers;
   }
 
