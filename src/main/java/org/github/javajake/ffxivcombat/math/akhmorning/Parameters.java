@@ -6,6 +6,10 @@ import org.github.javajake.ffxivcombat.character.PlayableCharacter;
 import org.github.javajake.ffxivcombat.constants.JobMod;
 import org.github.javajake.ffxivcombat.constants.LevelMod;
 
+/**
+ * Codified versions of the math in the page
+ * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/</a>.
+ */
 public class Parameters {
 
   private final PlayableCharacter character;
@@ -14,6 +18,12 @@ public class Parameters {
   private final LevelMod levelMod;
   private final JobMod jobMod;
 
+  /**
+   * Creates new "Parameters" math for a given character.
+   *
+   * @param character     the character to apply the math
+   * @param rateModifiers rate modifiers active on the current character
+   */
   public Parameters(
       final PlayableCharacter character,
       final List<RateModifier> rateModifiers) {
@@ -33,6 +43,9 @@ public class Parameters {
         }
         case CRITICAL_RATE -> criticalHitRateChange += rateModifier.amount();
         case DIRECT_HIT_RATE -> directHitRateChange += rateModifier.amount();
+        default ->
+            throw new UnsupportedOperationException(
+                "BUG: unknown rate modifier: " + rateModifier.rate());
       }
     }
 
@@ -43,11 +56,11 @@ public class Parameters {
 
   /**
    * Documentation:
-   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp</a>
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#total-hp</a>.
    *
    * @return the probability of a Direct Hit
    */
-  public int totalHP() {
+  public int totalHp() {
     if (levelMod.level() < LevelMod.EW_LEVEL) {
       throw new UnsupportedOperationException("Total HP below level 90 is unknown");
     } else {
@@ -69,10 +82,11 @@ public class Parameters {
 
   /**
    * Documentation:
-   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability</a>
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#block-probability</a>.
    *
    * @return the probability of blocking
    */
+  @SuppressWarnings({"checkstyle:AbbreviationAsWordInName", "checkstyle:MethodNameCheck"})
   public int pBLK() {
     return (int)
         // ⌊ ( 30 · Block Rate ) / LevelMod[Lv, DIV] + 10 ⌋
@@ -81,27 +95,33 @@ public class Parameters {
 
   /**
    * Documentation:
-   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#direct-hit-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#direct-hit-probability</a>
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#direct-hit-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#direct-hit-probability</a>.
    *
    * @return the probability of a Direct Hit
    */
+  @SuppressWarnings({"checkstyle:AbbreviationAsWordInName", "checkstyle:MethodNameCheck"})
   public double pDHR() {
     return
         // p(DHR) = ⌊ 550 · ( DHR - LevelMod[Lv, SUB] )/ LevelMod[Lv, DIV] ⌋ / 10
         (Math.floor(550.0 * (this.character.directHit() - levelMod.sub()) / levelMod.div()) / 10.0)
+            // Custom convenience for dealing with buffs
             + this.directHitRateChange;
   }
 
   /**
    * Documentation:
-   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#critical-hit-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#critical-hit-probability</a>
+   * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#critical-hit-probability">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/parameters/#critical-hit-probability</a>.
    *
    * @return the probability of a Critical Hit
    */
+  @SuppressWarnings({"checkstyle:AbbreviationAsWordInName", "checkstyle:MethodNameCheck"})
   public double pCHR() {
     return
         // p(CHR) = ⌊ 200 · ( CHR - LevelModLv, SUB )/ LevelModLv, DIV + 50 ⌋ / 10
-        (Math.floor(200.0 * (this.character.criticalHit() - levelMod.sub()) / levelMod.div() + 50) / 10.0)
+        (Math.floor(200.0 * (this.character.criticalHit() - levelMod.sub())
+            // / LevelModLv, DIV + 50 ⌋ / 10
+            / levelMod.div() + 50) / 10.0)
+            // Custom convenience for dealing with buffs
             + this.criticalHitRateChange;
   }
 }

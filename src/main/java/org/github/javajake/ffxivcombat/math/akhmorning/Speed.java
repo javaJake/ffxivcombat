@@ -1,9 +1,18 @@
 package org.github.javajake.ffxivcombat.math.akhmorning;
 
+/**
+ * Codified versions of the math in the page
+ * <a href="https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/speed/">https://www.akhmorning.com/allagan-studies/how-to-be-a-math-wizard/shadowbringers/speed/</a>.
+ */
 public class Speed {
 
   private final Functions functions;
 
+  /**
+   * Creates new "Speed" math for a given character.
+   *
+   * @param functions     the "Functions" Ahkmorning math
+   */
   public Speed(Functions functions) {
     this.functions = functions;
   }

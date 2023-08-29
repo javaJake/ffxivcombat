@@ -22,10 +22,24 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+tasks.withType<Javadoc> {
+    options.encoding = "UTF-8"
+}
+tasks.withType<Test> {
+    systemProperty("file.encoding", "UTF-8")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
 
 checkstyle {
     toolVersion = "10.12.2"
+}
+
+pmd {
+    ruleSetFiles = files("config/pmd/pmd.xml")
 }

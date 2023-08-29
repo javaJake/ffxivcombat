@@ -19,7 +19,6 @@ public final class PartyUtil {
    * @param partyMembers the list of characters that are in the party
    * @return the stat multipliers that take effect for being in this party
    */
-  @SuppressWarnings("PMD.DataflowAnomalyAnalysis") // has array is triggering this deprecated check
   public static List<StatMultiplier> computePartyBuffGiven(PlayableCharacter... partyMembers) {
     final int pet = -1;
     final int tank = 0;
