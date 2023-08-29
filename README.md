@@ -1,14 +1,19 @@
 # FFXIV Combat Library
 
-The **primary goal** of this library is to provide the foundational math for theory-crafting in Final
-Fantasy 14. The functions here have been cross-checked enough times that confidence has grown in
-their usefulness; nevertheless, feedback and testing is absolutely welcome!
+The **primary goal** of this library is to provide the foundational math for theorycrafting in Final
+Fantasy 14, to make it far easier to start new theorycrafting projects. It is incredibly difficult
+and time-consuming to get the math correct. The hope is that a library such as this will make it easier
+by letting sim authors skip this step, or at least the bulk of it.
 
 The **secondary goal** of this library is to contribute back to the community that helped me. The
 math package is purposefully aligned with the resources that were used to figure the math out. In
 this way, it should be easy to cross-reference against the authoritative sources, so that this can
 potentially be used as a secondary reference, a teaching tool, etc., by the community. However I can
 help, I'd like to!
+
+The functions here have been cross-checked enough times that confidence has grown in their
+usefulness; nevertheless, feedback and testing is absolutely welcome! A proper suite of unit tests
+is a work in progress at the moment.
 
 # How to Use
 The library is not yet published to Maven Central. When it is, there will be documentation here for
