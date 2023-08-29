@@ -27,7 +27,7 @@ The basic flow should be:
    or potion affects.
 3. Use the `BuffedStatsCharacterBuilder` to create a new `PlayableCharacter` given the
    `StatMultiplier` and `StatAdjustment` buffs.
-4. Create the correct math module from the `org.github.javajake.ffxivcombat.endwalker.math` package
+4. Create the desired math class from the `org.github.javajake.ffxivcombat.endwalker.math` package
    and provide the "buffed" character along with any additional buffs or parameters the math class
    requires.
 
