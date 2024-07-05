@@ -30,16 +30,16 @@ public final class PartyUtil {
     final boolean[] has = new boolean[5];
     for (PlayableCharacter partyMember : partyMembers) {
       int job = switch (partyMember.jobMod()) {
-        case JobMod.DRK_LIVING_SHADOW -> 0;
-        case JobMod.PLD, JobMod.WAR, JobMod.DRK, JobMod.GNB -> tank;
-        case JobMod.WHM, JobMod.SCH, JobMod.AST -> healer;
-        case JobMod.MNK, JobMod.DRG, JobMod.NIN, JobMod.SAM -> melee;
-        case JobMod.BRD, JobMod.MCH, JobMod.DNC -> ranged;
-        case JobMod.BLM, JobMod.SMN, JobMod.RDM -> caster;
+        case DRK_LIVING_SHADOW -> 0;
+        case PLD, WAR, DRK, GNB -> tank;
+        case WHM, SCH, AST -> healer;
+        case MNK, DRG, NIN, SAM, VPR -> melee;
+        case BRD, MCH, DNC -> ranged;
+        case BLM, SMN, RDM, PCT -> caster;
         // Pets are ignored
-        case JobMod.MCH_AUTOMATON_QUEEN,
-             JobMod.AST_EARTHLY_STAR,
-             JobMod.NIN_BUNSHIN -> pet;
+        case MCH_AUTOMATON_QUEEN,
+             AST_EARTHLY_STAR,
+             NIN_BUNSHIN -> pet;
       };
       // If job is not a pet
       if (job != pet) {
